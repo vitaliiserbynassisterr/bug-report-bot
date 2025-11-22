@@ -144,7 +144,9 @@ def format_stats(stats: Dict[str, Any]) -> str:
         message += "**By Status:**\n"
         for status, count in by_status.items():
             status_emoji = get_status_emoji(status)
-            message += f"  {status_emoji} {status}: {count}\n"
+            # Escape underscores for Markdown
+            status_display = status.replace("_", "\\_")
+            message += f"  {status_emoji} {status_display}: {count}\n"
         message += "\n"
 
     # By priority
@@ -153,7 +155,8 @@ def format_stats(stats: Dict[str, Any]) -> str:
         message += "**By Priority:**\n"
         for priority, count in by_priority.items():
             priority_emoji = get_priority_emoji(priority)
-            message += f"  {priority_emoji} {priority}: {count}\n"
+            priority_display = priority.replace("_", "\\_")
+            message += f"  {priority_emoji} {priority_display}: {count}\n"
         message += "\n"
 
     # By environment
@@ -162,7 +165,8 @@ def format_stats(stats: Dict[str, Any]) -> str:
         message += "**By Environment:**\n"
         for env, count in by_environment.items():
             env_emoji = get_environment_emoji(env)
-            message += f"  {env_emoji} {env}: {count}\n"
+            env_display = env.replace("_", "\\_")
+            message += f"  {env_emoji} {env_display}: {count}\n"
 
     return message
 
