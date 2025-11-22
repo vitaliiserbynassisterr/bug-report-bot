@@ -213,6 +213,27 @@ class BackendClient:
 
         return await self._make_request("PATCH", f"/bugs/{bug_id}", data=update_data)
 
+    async def get_bug(self, bug_id: str) -> Dict[str, Any]:
+        """
+        Get detailed information about a specific bug.
+
+        Args:
+            bug_id: Bug identifier (e.g., BUG-001)
+
+        Returns:
+            Bug data
+
+        Raises:
+            BackendAPIError: If the request fails
+        """
+        logger.info(f"Fetching bug {bug_id}")
+        response = await self._make_request("GET", f"/bugs/{bug_id}")
+
+        # Return data object if present, otherwise return full response
+        if isinstance(response, dict) and "data" in response:
+            return response["data"]
+        return response
+
 
 # Global client instance
 backend_client = BackendClient()

@@ -171,6 +171,110 @@ def format_stats(stats: Dict[str, Any]) -> str:
     return message
 
 
+def format_bug_details(bug: Dict[str, Any]) -> str:
+    """
+    Format detailed bug information for /view command.
+
+    Args:
+        bug: Bug dictionary from backend
+
+    Returns:
+        Formatted detailed bug information
+    """
+    bug_id = bug.get("bug_id") or bug.get("id", "UNKNOWN")
+    title = bug.get("title", "Untitled")
+    description = bug.get("description", "No description")
+    status = bug.get("status", "UNKNOWN")
+    priority = bug.get("priority", "UNKNOWN")
+    environment = bug.get("environment", "UNKNOWN")
+    created_at = bug.get("created_at", "")
+    updated_at = bug.get("updated_at", "")
+    fixed_at = bug.get("fixed_at", "")
+    console_logs = bug.get("console_logs", "")
+    tags = bug.get("tags", [])
+    screenshots = bug.get("screenshots", [])
+    assignee = bug.get("assignee", "")
+    github_pr = bug.get("github_pr", "")
+    reporter = bug.get("reporter", {})
+    notes = bug.get("notes", [])
+
+    # Get emojis
+    status_emoji = get_status_emoji(status)
+    priority_emoji = get_priority_emoji(priority)
+    env_emoji = get_environment_emoji(environment)
+
+    # Build message
+    message = f"🐛 **Bug Details**\n\n"
+    message += f"**ID:** {bug_id}\n"
+    message += f"**Title:** {title}\n\n"
+    message += f"**Description:**\n{description}\n\n"
+    message += f"**Status:** {status_emoji} {status}\n"
+    message += f"**Priority:** {priority_emoji} {priority}\n"
+    message += f"**Environment:** {env_emoji} {environment}\n\n"
+
+    # Reporter info
+    reporter_name = reporter.get("first_name", "Unknown")
+    if reporter.get("username"):
+        reporter_name += f" (@{reporter.get('username')})"
+    message += f"**Reported by:** {reporter_name}\n"
+
+    # Timestamps
+    if created_at:
+        time_ago = _format_time_ago(created_at)
+        message += f"**Created:** {time_ago}\n"
+
+    if updated_at:
+        time_ago = _format_time_ago(updated_at)
+        message += f"**Updated:** {time_ago}\n"
+
+    if fixed_at:
+        time_ago = _format_time_ago(fixed_at)
+        message += f"**Fixed:** {time_ago}\n"
+
+    # Assignee
+    if assignee:
+        message += f"**Assignee:** {assignee}\n"
+
+    # GitHub PR
+    if github_pr:
+        message += f"**GitHub PR:** {github_pr}\n"
+
+    message += "\n"
+
+    # Screenshots
+    if screenshots:
+        message += f"**Screenshots:** {len(screenshots)} attached\n"
+
+    # Console logs
+    if console_logs:
+        # Truncate if too long
+        logs_preview = console_logs[:200] + "..." if len(console_logs) > 200 else console_logs
+        message += f"**Console Logs:**\n`{logs_preview}`\n\n"
+
+    # Tags
+    if tags:
+        tags_str = ", ".join(tags)
+        message += f"**Tags:** {tags_str}\n\n"
+
+    # Notes
+    if notes:
+        message += f"**Notes ({len(notes)}):**\n"
+        for i, note in enumerate(notes[:3], 1):  # Show max 3 notes
+            author = note.get("author", "Unknown")
+            text = note.get("text", "")
+            timestamp = note.get("timestamp", "")
+            time_ago = _format_time_ago(timestamp) if timestamp else ""
+
+            # Truncate note if too long
+            text_preview = text[:100] + "..." if len(text) > 100 else text
+            message += f"{i}. **{author}** ({time_ago}):\n   {text_preview}\n"
+
+        if len(notes) > 3:
+            message += f"   ... and {len(notes) - 3} more notes\n"
+
+    return message
+
+
 def _format_time_ago(timestamp_str: str) -> str:
     """
     Format timestamp as relative time (e.g., '2 hours ago').
