@@ -71,7 +71,8 @@ def main() -> None:
                     MessageHandler(
                         (filters.PHOTO | filters.TEXT) & ~filters.COMMAND,
                         receive_screenshot,
-                    )
+                    ),
+                    CallbackQueryHandler(receive_screenshot, pattern="^(skip|done)_action$"),
                 ],
                 ASKING_ENVIRONMENT: [
                     CallbackQueryHandler(receive_environment, pattern="^env_")
@@ -80,10 +81,12 @@ def main() -> None:
                     CallbackQueryHandler(receive_priority, pattern="^priority_")
                 ],
                 ASKING_CONSOLE_LOGS: [
-                    MessageHandler(filters.TEXT & ~filters.COMMAND, receive_console_logs)
+                    MessageHandler(filters.TEXT & ~filters.COMMAND, receive_console_logs),
+                    CallbackQueryHandler(receive_console_logs, pattern="^skip_action$"),
                 ],
                 ASKING_TAGS: [
-                    MessageHandler(filters.TEXT & ~filters.COMMAND, receive_tags)
+                    MessageHandler(filters.TEXT & ~filters.COMMAND, receive_tags),
+                    CallbackQueryHandler(receive_tags, pattern="^skip_action$"),
                 ],
                 CONFIRM_SUBMISSION: [
                     CallbackQueryHandler(handle_confirmation, pattern="^confirm_")

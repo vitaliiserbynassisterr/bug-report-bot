@@ -88,6 +88,22 @@ def get_environment_emoji(environment: str) -> str:
     return env_emojis.get(environment.upper(), "❓")
 
 
+def get_skip_keyboard() -> InlineKeyboardMarkup:
+    """
+    Get inline keyboard for skip/done actions.
+
+    Returns:
+        InlineKeyboardMarkup with Skip and Done options
+    """
+    keyboard = [
+        [
+            InlineKeyboardButton("⏭️ Skip", callback_data="skip_action"),
+            InlineKeyboardButton("✅ Done", callback_data="done_action"),
+        ]
+    ]
+    return InlineKeyboardMarkup(keyboard)
+
+
 def get_status_emoji(status: str) -> str:
     """
     Get emoji representation for bug status.

@@ -13,6 +13,7 @@ from utils.keyboards import (
     get_environment_keyboard,
     get_priority_keyboard,
     get_confirmation_keyboard,
+    get_skip_keyboard,
 )
 from services.backend_client import backend_client, BackendAPIError
 from services.bug_formatter import format_bug_summary, format_bug_created
@@ -95,8 +96,8 @@ async def receive_description(update: Update, context: ContextTypes.DEFAULT_TYPE
     await update.message.reply_text(
         "📸 **Screenshots**\n\n"
         "Send one or more screenshots of the bug.\n"
-        "You can send multiple photos in a row.\n\n"
-        "Type 'skip' or 'done' when finished.",
+        "You can send multiple photos in a row.",
+        reply_markup=get_skip_keyboard(),
         parse_mode="Markdown",
     )
 
@@ -114,9 +115,29 @@ async def receive_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
     Returns:
         Same state to allow multiple screenshots or next state
     """
-    logger.info(f"Received message in screenshot handler. Has text: {update.message.text is not None}, Has photo: {update.message.photo is not None}")
+    logger.info(f"Received message in screenshot handler. Has text: {update.message.text is not None}, Has photo: {update.message.photo is not None}, Has callback: {update.callback_query is not None}")
 
-    # Check if user wants to skip or finish
+    # Check if user clicked skip/done button
+    if update.callback_query:
+        query = update.callback_query
+        await query.answer()
+
+        screenshot_count = len(context.user_data["bug_data"]["screenshots"])
+        if screenshot_count > 0:
+            await query.edit_message_text(f"✅ Received {screenshot_count} screenshot(s).")
+        else:
+            await query.edit_message_text("📝 No screenshots added.")
+
+        # Ask for environment
+        await query.message.reply_text(
+            "🌍 **Environment**\n\n"
+            "In which environment did you encounter this bug?",
+            reply_markup=get_environment_keyboard(),
+            parse_mode="Markdown",
+        )
+        return ASKING_ENVIRONMENT
+
+    # Check if user typed skip or done
     if update.message.text:
         text = update.message.text.strip().lower()
         logger.info(f"User sent text: '{text}'")
@@ -223,7 +244,8 @@ async def receive_priority(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     await query.message.reply_text(
         "📋 **Console Logs**\n\n"
         "Do you have any console logs or error messages?\n"
-        "Paste them here or type 'skip'.",
+        "Paste them here or click Skip.",
+        reply_markup=get_skip_keyboard(),
         parse_mode="Markdown",
     )
 
@@ -241,6 +263,22 @@ async def receive_console_logs(update: Update, context: ContextTypes.DEFAULT_TYP
     Returns:
         Next conversation state
     """
+    # Handle skip button click
+    if update.callback_query:
+        query = update.callback_query
+        await query.answer()
+        await query.edit_message_text("📝 No console logs added.")
+
+        await query.message.reply_text(
+            "🏷️ **Tags**\n\n"
+            "Add tags to categorize this bug (comma-separated).\n"
+            "Examples: UI, mobile, authentication",
+            reply_markup=get_skip_keyboard(),
+            parse_mode="Markdown",
+        )
+        return ASKING_TAGS
+
+    # Handle text input
     text = update.message.text.strip()
 
     if text.lower() not in ["skip", "no", "none"]:
@@ -252,8 +290,8 @@ async def receive_console_logs(update: Update, context: ContextTypes.DEFAULT_TYP
     await update.message.reply_text(
         "🏷️ **Tags**\n\n"
         "Add tags to categorize this bug (comma-separated).\n"
-        "Examples: UI, mobile, authentication\n\n"
-        "Type 'skip' to skip.",
+        "Examples: UI, mobile, authentication",
+        reply_markup=get_skip_keyboard(),
         parse_mode="Markdown",
     )
 
@@ -271,6 +309,23 @@ async def receive_tags(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
     Returns:
         Next conversation state
     """
+    # Handle skip button click
+    if update.callback_query:
+        query = update.callback_query
+        await query.answer()
+        await query.edit_message_text("📝 No tags added.")
+
+        # Show summary
+        bug_data = context.user_data["bug_data"]
+        summary = format_bug_summary(bug_data)
+
+        await query.message.reply_text(
+            summary, reply_markup=get_confirmation_keyboard(), parse_mode="Markdown"
+        )
+
+        return CONFIRM_SUBMISSION
+
+    # Handle text input
     text = update.message.text.strip()
 
     if text.lower() not in ["skip", "no", "none"]:
