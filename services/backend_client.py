@@ -24,7 +24,7 @@ class BackendClient:
         """Initialize the backend client."""
         self.base_url = settings.BACKEND_API_URL.rstrip("/")
         self.headers = {
-            "Authorization": f"Bearer {settings.BACKEND_INTERNAL_TOKEN}",
+            "X-Internal-Token": settings.BACKEND_INTERNAL_TOKEN,
             "Content-Type": "application/json",
         }
         self.timeout = httpx.Timeout(settings.REQUEST_TIMEOUT)

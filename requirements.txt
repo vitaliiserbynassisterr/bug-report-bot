@@ -1,8 +1,8 @@
 # Telegram Bot
-python-telegram-bot[all]==20.7
+python-telegram-bot==21.9
 
 # HTTP Client
-httpx==0.26.0
+httpx>=0.24.0
 
 # Environment Variables
 python-dotenv==1.0.0

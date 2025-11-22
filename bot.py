@@ -88,6 +88,7 @@ def main() -> None:
                 ],
             },
             fallbacks=[CommandHandler("cancel", cancel_bug_report)],
+            per_message=False,
         )
 
         # Add handlers
