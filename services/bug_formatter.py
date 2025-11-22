@@ -66,8 +66,9 @@ def format_bug_created(bug_response: Dict[str, Any]) -> str:
     Returns:
         Formatted success message
     """
-    bug_id = bug_response.get("id", "UNKNOWN")
-    status = bug_response.get("status", "OPEN")
+    # Try to get bug_id from response (backend returns bug_id at root level or in data)
+    bug_id = bug_response.get("bug_id") or bug_response.get("data", {}).get("bug_id", "UNKNOWN")
+    status = bug_response.get("data", {}).get("status") or bug_response.get("status", "OPEN")
 
     message = f"✅ **Bug created successfully!**\n\n"
     message += f"**Bug ID:** {bug_id}\n"
@@ -94,7 +95,7 @@ def format_bug_list(bugs: List[Dict[str, Any]]) -> str:
     message = "🐛 **Your Recent Bugs:**\n\n"
 
     for i, bug in enumerate(bugs, 1):
-        bug_id = bug.get("id", "UNKNOWN")
+        bug_id = bug.get("bug_id") or bug.get("id", "UNKNOWN")
         title = bug.get("title", "Untitled")
         status = bug.get("status", "UNKNOWN")
         priority = bug.get("priority", "UNKNOWN")
