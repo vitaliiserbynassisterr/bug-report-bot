@@ -86,8 +86,11 @@ async def receive_description(update: Update, context: ContextTypes.DEFAULT_TYPE
         )
         return ASKING_DESCRIPTION
 
-    # Save description
-    context.user_data["bug_data"]["title"] = description
+    # Save description (use as both title and description for backend)
+    # Title: truncate to first 200 chars if needed
+    title = description[:200] if len(description) > 200 else description
+    context.user_data["bug_data"]["title"] = title
+    context.user_data["bug_data"]["description"] = description
 
     await update.message.reply_text(
         "📸 **Screenshots**\n\n"
