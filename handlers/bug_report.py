@@ -177,7 +177,8 @@ async def receive_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
         count = len(context.user_data["bug_data"]["screenshots"])
         await update.message.reply_text(
             f"✅ Screenshot {count} received!\n\n"
-            f"Send more screenshots or type 'done' to continue."
+            f"Send more screenshots or click Done.",
+            reply_markup=get_skip_keyboard(),
         )
 
         return ASKING_SCREENSHOTS
