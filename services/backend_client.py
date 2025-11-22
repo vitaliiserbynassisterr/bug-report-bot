@@ -188,6 +188,31 @@ class BackendClient:
         logger.info("Fetching bug statistics")
         return await self._make_request("GET", "/bugs/stats")
 
+    async def update_bug_status(
+        self, bug_id: str, status: str, assignee: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Update bug status and optionally assign it.
+
+        Args:
+            bug_id: Bug identifier (e.g., BUG-001)
+            status: New status (OPEN, IN_PROGRESS, FIXED, CLOSED)
+            assignee: Optional assignee name
+
+        Returns:
+            Updated bug data
+
+        Raises:
+            BackendAPIError: If the request fails
+        """
+        logger.info(f"Updating bug {bug_id} to status {status}")
+
+        update_data = {"status": status}
+        if assignee:
+            update_data["assignee"] = assignee
+
+        return await self._make_request("PATCH", f"/bugs/{bug_id}", data=update_data)
+
 
 # Global client instance
 backend_client = BackendClient()

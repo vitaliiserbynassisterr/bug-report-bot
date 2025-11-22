@@ -34,6 +34,7 @@ from handlers.bug_report import (
 )
 from handlers.my_bugs import my_bugs_command
 from handlers.stats import stats_command
+from handlers.update_bug import status_command
 
 # Configure logging
 logging.basicConfig(
@@ -97,6 +98,7 @@ def main() -> None:
         application.add_handler(bug_report_handler)
         application.add_handler(CommandHandler("mybugs", my_bugs_command))
         application.add_handler(CommandHandler("stats", stats_command))
+        application.add_handler(CommandHandler("status", status_command))
 
         # Start the bot
         logger.info("Bot is starting...")
