@@ -13,6 +13,7 @@ from utils.keyboards import (
     get_environment_keyboard,
     get_priority_keyboard,
     get_confirmation_keyboard,
+    get_skip_done_keyboard,
     get_skip_keyboard,
 )
 from services.backend_client import backend_client, BackendAPIError
@@ -97,7 +98,7 @@ async def receive_description(update: Update, context: ContextTypes.DEFAULT_TYPE
         "📸 **Screenshots**\n\n"
         "Send one or more screenshots of the bug.\n"
         "You can send multiple photos in a row.",
-        reply_markup=get_skip_keyboard(),
+        reply_markup=get_skip_done_keyboard(),
         parse_mode="Markdown",
     )
 
@@ -115,11 +116,21 @@ async def receive_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
     Returns:
         Same state to allow multiple screenshots or next state
     """
-    logger.info(f"Received message in screenshot handler. Has text: {update.message.text is not None}, Has photo: {update.message.photo is not None}, Has callback: {update.callback_query is not None}")
+    # Check if this is a callback query or message
+    has_callback = update.callback_query is not None
+    has_message = update.message is not None
+    has_text = update.message.text is not None if has_message else False
+    has_photo = update.message.photo is not None if has_message else False
+
+    logger.info(f"Screenshot handler - Callback: {has_callback}, Message: {has_message}, Text: {has_text}, Photo: {has_photo}")
+
+    if has_callback:
+        logger.info(f"Callback data: {update.callback_query.data}")
 
     # Check if user clicked skip/done button
     if update.callback_query:
         query = update.callback_query
+        logger.info(f"Processing callback query: {query.data}")
         await query.answer()
 
         screenshot_count = len(context.user_data["bug_data"]["screenshots"])
@@ -178,7 +189,7 @@ async def receive_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
         await update.message.reply_text(
             f"✅ Screenshot {count} received!\n\n"
             f"Send more screenshots or click Done.",
-            reply_markup=get_skip_keyboard(),
+            reply_markup=get_skip_done_keyboard(),
         )
 
         return ASKING_SCREENSHOTS
@@ -264,9 +275,10 @@ async def receive_console_logs(update: Update, context: ContextTypes.DEFAULT_TYP
     Returns:
         Next conversation state
     """
-    # Handle skip button click
+    # Handle skip/done button click
     if update.callback_query:
         query = update.callback_query
+        logger.info(f"Console logs handler - Callback data: {query.data}")
         await query.answer()
         await query.edit_message_text("📝 No console logs added.")
 
@@ -310,9 +322,10 @@ async def receive_tags(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
     Returns:
         Next conversation state
     """
-    # Handle skip button click
+    # Handle skip/done button click
     if update.callback_query:
         query = update.callback_query
+        logger.info(f"Tags handler - Callback data: {query.data}")
         await query.answer()
         await query.edit_message_text("📝 No tags added.")
 
