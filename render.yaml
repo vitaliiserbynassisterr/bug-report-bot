@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: bug-report-telegram-bot
+    env: docker
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: BACKEND_API_URL
+        sync: false
+      - key: BACKEND_INTERNAL_TOKEN
+        sync: false
+      - key: ALLOWED_USER_IDS
+        sync: false
+      - key: LOG_LEVEL
+        value: INFO
