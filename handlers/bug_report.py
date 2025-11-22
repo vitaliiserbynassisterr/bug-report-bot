@@ -111,9 +111,12 @@ async def receive_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE)
     Returns:
         Same state to allow multiple screenshots or next state
     """
+    logger.info(f"Received message in screenshot handler. Has text: {update.message.text is not None}, Has photo: {update.message.photo is not None}")
+
     # Check if user wants to skip or finish
     if update.message.text:
         text = update.message.text.strip().lower()
+        logger.info(f"User sent text: '{text}'")
         if text in ["skip", "done", "finish", "next"]:
             screenshot_count = len(context.user_data["bug_data"]["screenshots"])
             if screenshot_count > 0:

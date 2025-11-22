@@ -138,7 +138,7 @@ class BackendClient:
             BackendAPIError: If the request fails
         """
         logger.info(f"Creating bug: {bug_data.get('title', 'N/A')}")
-        return await self._make_request("POST", "/bugs", data=bug_data)
+        return await self._make_request("POST", "/bugs/", data=bug_data)
 
     async def get_user_bugs(
         self, telegram_user_id: int, limit: int = 10
@@ -162,7 +162,7 @@ class BackendClient:
             "limit": limit,
             "sort": "-created_at",  # Most recent first
         }
-        response = await self._make_request("GET", "/bugs", params=params)
+        response = await self._make_request("GET", "/bugs/", params=params)
 
         # Handle different possible response formats
         if isinstance(response, list):
