@@ -24,9 +24,12 @@ RUN useradd -m -u 1000 botuser && \
 # Switch to non-root user
 USER botuser
 
-# Health check (optional)
+# Expose port for health check (Render requirement)
+EXPOSE 10000
+
+# Health check endpoint
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import sys; sys.exit(0)"
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:10000/health')"
 
 # Run the bot
 CMD ["python", "bot.py"]

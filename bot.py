@@ -2,6 +2,9 @@
 
 import logging
 import sys
+import threading
+import os
+from flask import Flask
 
 from telegram.ext import (
     Application,
@@ -48,6 +51,25 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
+# Create Flask app for health check
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    """Root endpoint."""
+    return {'status': 'ok', 'service': 'telegram-bug-bot'}, 200
+
+@app.route('/health')
+def health():
+    """Health check endpoint for Render."""
+    return {'status': 'healthy', 'message': 'Bot is running'}, 200
+
+def run_flask():
+    """Run Flask server in a separate thread."""
+    port = int(os.environ.get('PORT', 10000))
+    logger.info(f"Starting health check server on port {port}")
+    app.run(host='0.0.0.0', port=port, debug=False, use_reloader=False)
+
 
 def main() -> None:
     """Start the bot."""
@@ -56,6 +78,10 @@ def main() -> None:
         logger.info("Initializing Telegram bug reporting bot...")
         logger.info(f"Backend API URL: {settings.BACKEND_API_URL}")
         logger.info(f"Allowed user IDs: {settings.ALLOWED_USER_IDS}")
+
+        # Start Flask health check server in background thread
+        flask_thread = threading.Thread(target=run_flask, daemon=True)
+        flask_thread.start()
 
         # Create application
         application = Application.builder().token(settings.TELEGRAM_BOT_TOKEN).build()
