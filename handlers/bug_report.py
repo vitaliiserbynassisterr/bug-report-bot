@@ -42,8 +42,11 @@ async def start_bug_report(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     Returns:
         Next conversation state
     """
+    logger.info(f"start_bug_report called by user {update.effective_user.id}")
+
     # Check authorization
     if not await check_authorization(update):
+        logger.warning(f"User {update.effective_user.id} not authorized for /bug")
         return ConversationHandler.END
 
     # Initialize bug data in user context

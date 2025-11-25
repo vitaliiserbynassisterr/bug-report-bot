@@ -12,6 +12,7 @@ from telegram.ext import (
     MessageHandler,
     CallbackQueryHandler,
     ConversationHandler,
+    ContextTypes,
     filters,
 )
 
@@ -53,6 +54,22 @@ logger = logging.getLogger(__name__)
 
 # Create Flask app for health check
 app = Flask(__name__)
+
+
+async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Log errors caused by updates."""
+    logger.error(f"Exception while handling an update: {context.error}")
+    logger.error(f"Update that caused error: {update}")
+
+    # Try to notify the user
+    try:
+        if update and hasattr(update, 'effective_message') and update.effective_message:
+            await update.effective_message.reply_text(
+                "❌ An error occurred while processing your request. "
+                "Please try again or contact support if the issue persists."
+            )
+    except Exception as e:
+        logger.error(f"Failed to send error message to user: {e}")
 
 @app.route('/')
 def home():
@@ -130,6 +147,9 @@ def main() -> None:
         application.add_handler(CommandHandler("stats", stats_command))
         application.add_handler(CommandHandler("status", status_command))
         application.add_handler(CommandHandler("view", view_command))
+
+        # Add error handler
+        application.add_error_handler(error_handler)
 
         # Start the bot
         logger.info("Bot is starting...")

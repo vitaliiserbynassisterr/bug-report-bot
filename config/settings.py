@@ -21,6 +21,16 @@ class Settings:
     # Authorization
     ALLOWED_USER_IDS: List[int] = []
 
+    # Claude AI Configuration
+    ANTHROPIC_API_KEY: str = os.getenv("ANTHROPIC_API_KEY", "")
+    AI_AGENT_ENABLED: bool = os.getenv("AI_AGENT_ENABLED", "false").lower() == "true"
+    AI_COMPLEXITY_THRESHOLD: str = os.getenv("AI_COMPLEXITY_THRESHOLD", "SIMPLE")
+
+    # GitHub Configuration
+    GITHUB_TOKEN: str = os.getenv("GITHUB_TOKEN", "")
+    GITHUB_REPO_OWNER: str = os.getenv("GITHUB_REPO_OWNER", "vitaliiserbynassisterr")
+    GITHUB_REPO_NAME: str = os.getenv("GITHUB_REPO_NAME", "bug-report-bot")
+
     # Logging
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
 
