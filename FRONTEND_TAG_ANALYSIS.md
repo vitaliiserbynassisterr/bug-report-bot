@@ -20,10 +20,10 @@ These will appear as buttons in the Telegram bot:
 | 2 | Authentication | 🔐 | **Critical** - Blocks access | High |
 | 3 | Token Marketplace | 💰 | **High** - Revenue feature | High |
 | 4 | AI Lab | 🧪 | **High** - Community engagement | Medium |
-| 5 | Dashboard | 📊 | **Medium** - Daily use | Medium |
+| 5 | Tasks Dashboard | 📊 | **Medium** - Daily use | Medium |
 | 6 | Trading & Charts | 📈 | **High** - Financial data | High |
 | 7 | Query Credits | ⚡ | **Medium** - Monetization | Medium |
-| 8 | Data Market | 📡 | **Medium** - Marketplace | Medium |
+| 8 | AI Market | 🛍️ | **Medium** - AI services marketplace | Medium |
 
 **Reasoning for 8 tags:**
 - Covers all major user-facing features
@@ -67,13 +67,13 @@ When user selects tags in bug report flow:
 │  └─────────────┴─────────────────┘   │
 │                                       │
 │  ┌─────────────┬─────────────────┐   │
-│  │ 📊 Dashboard│ 📈 Trading     │   │
-│  │             │   & Charts     │   │
+│  │ 📊 Tasks    │ 📈 Trading     │   │
+│  │   Dashboard │   & Charts     │   │
 │  └─────────────┴─────────────────┘   │
 │                                       │
 │  ┌─────────────┬─────────────────┐   │
-│  │ ⚡ Query    │ 📡 Data        │   │
-│  │   Credits   │   Market       │   │
+│  │ ⚡ Query    │ 🛍️ AI Market   │   │
+│  │   Credits   │                │   │
 │  └─────────────┴─────────────────┘   │
 │                                       │
 │  ┌───────────────────────────────┐   │

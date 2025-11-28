@@ -11,10 +11,10 @@
 │ 🔐 Authentication           │ Wallet, login, registration, sessions       │
 │ 💰 Token Marketplace        │ Token creation, trading, launch pools       │
 │ 🧪 AI Lab                   │ Community contributions, data validation    │
-│ 📊 Dashboard                │ User overview, rewards, tasks, referrals    │
+│ 📊 Tasks Dashboard          │ User tasks, rewards, referrals, completion  │
 │ 📈 Trading & Charts         │ DEX swap, price charts, pool analytics      │
 │ ⚡ Query Credits            │ Credit system, payments, balance            │
-│ 📡 Data Market              │ Marketplace for data and services           │
+│ 🛍️ AI Market               │ AI marketplace, AI services, model trading  │
 └─────────────────────────────┴─────────────────────────────────────────────┘
 
 💾 TELEGRAM BOT LAYOUT (4x2 Grid)
@@ -27,11 +27,11 @@
 │ 💰 Token     │ 🧪 AI Lab    │
 │   Market     │              │
 ├──────────────┼──────────────┤
-│ 📊 Dashboard │ 📈 Trading   │
-│              │   & Charts   │
+│ 📊 Tasks     │ 📈 Trading   │
+│   Dashboard  │   & Charts   │
 ├──────────────┼──────────────┤
-│ ⚡ Query     │ 📡 Data      │
-│   Credits    │   Market     │
+│ ⚡ Query     │ 🛍️ AI Market │
+│   Credits    │              │
 └──────────────┴──────────────┘
       [✏️ Add Custom Tag]      
          [✅ Done]             

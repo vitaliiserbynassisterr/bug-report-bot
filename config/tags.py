@@ -66,16 +66,16 @@ MAIN_TAGS = [
         "keywords": ["ai lab", "contribution", "validation", "community", "data contribution"]
     },
     {
-        "id": "dashboard",
-        "label": "📊 Dashboard",
-        "description": "User overview, rewards, referrals, tasks, daily rewards, user verification",
+        "id": "tasks-dashboard",
+        "label": "📊 Tasks Dashboard",
+        "description": "User tasks, daily rewards, referrals, task completion, user verification",
         "files": [
             "src/app/(app)/dashboard/**",
             "src/components/dashboard/**",
             "src/store/tasks-v3-slice.ts",
             "src/components/tasks-v3/**"
         ],
-        "keywords": ["dashboard", "rewards", "tasks", "referral", "daily reward", "overview"]
+        "keywords": ["dashboard", "tasks", "rewards", "referral", "daily reward", "overview", "task completion"]
     },
     {
         "id": "trading",
@@ -101,15 +101,15 @@ MAIN_TAGS = [
         "keywords": ["credits", "payment", "balance", "boost", "purchase"]
     },
     {
-        "id": "data-market",
-        "label": "📡 Data Market",
-        "description": "Marketplace for data and services, airdrop management",
+        "id": "ai-market",
+        "label": "🛍️ AI Market",
+        "description": "AI marketplace, AI services, model marketplace, AI tools trading",
         "files": [
-            "src/app/(app)/data-market/**",
-            "src/app/(app)/airdrop/**",
-            "src/services/data-market.service.ts"
+            "src/app/(app)/ai-market/**",
+            "src/components/ai-market/**",
+            "src/services/ai-market.service.ts"
         ],
-        "keywords": ["data market", "marketplace", "airdrop", "services"]
+        "keywords": ["ai market", "marketplace", "ai services", "model marketplace", "ai tools"]
     }
 ]
 
